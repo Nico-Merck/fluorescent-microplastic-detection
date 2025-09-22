@@ -67,6 +67,6 @@ conda activate mp_venv
 
 ## License
 
-This project is licensed under the terms of the **Apache License 2.0**.  
+This project is licensed under the terms of the **Apache-2.0 License**.  
 See the [LICENSE](LICENSE) file for details.
 
