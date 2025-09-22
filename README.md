@@ -45,7 +45,7 @@ To run the notebook, you need:
 Install dependencies with:
 ```bash
 conda env create -f environment.yml
-conda activate spectroscopy
+conda activate mp_venv
 ```
 
 ## Usage
