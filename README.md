@@ -52,8 +52,8 @@ conda activate mp_venv
 
 1. Clone the repository:
    ```bash
-   git clone [<repository-url>](https://github.com/Nico-Merck/fluorescent-microplastic-detection.git)
-   cd [<repository-name>]
+   git clone https://github.com/Nico-Merck/fluorescent-microplastic-detection.git
+   cd fluorescent-microplastic-detection
    ```
 
 2. Install the environment as described above.  
