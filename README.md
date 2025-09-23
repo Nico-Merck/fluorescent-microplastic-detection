@@ -10,22 +10,27 @@ This study demonstrates in-flow detection of polypropylene particles containing 
 ```
 .
 ├── data/                                            # Raw and processed spectral data
-│   ├── *.csv                                        # Individual measurement series as CSV files
-│   ├── spectra_dict.npy                             # NumPy dictionary containing all spectra
-│   └── wavelengths.npy                              # NumPy array with wavelength bins
+│   ├── ipi_images                                   # Selection of recorded IPI images
+│   │   └── *.png                                    # Classified as Bubble or Particle (Polypropylene)
+│   └── spectral_data                                # Fluorescence spectra from measurements
+│       ├── *.csv                                    # Individual measurement series as CSV files
+│       ├── spectra_dict.npy                         # NumPy dictionary containing all spectra
+│       └── wavelengths.npy                          # NumPy array with wavelength bins
 ├── README.md                                        # Project description
 └── spectroscopy_on_fluorescent_mp_particles.ipynb   # Jupyter Notebook with analysis workflow
 ```
 
 ## Contents
 
-- **Data folder**  
-  - `.csv` files: Spectra of all measurement series.  
-  - `wavelengths.npy`: NumPy array containing the wavelength bins used for all spectra.  
-  - `spectra_dict.npy`: Dictionary storing the spectra of all measurement series, accessible via NumPy.
- 
+- **Data folder**
+  - `ipi_images/`: Selection of recorded IPI images (classified as bubble or polypropylene particle).  
+  - `spectral_data/`: Fluorescence spectra from measurements.  
+    - `*.csv`: Individual measurement series as CSV files.  
+    - `wavelengths.npy`: NumPy array containing the wavelength bins used for all spectra.  
+    - `spectra_dict.npy`: NumPy dictionary storing the spectra of all measurement series.  
+
 - **Jupyter Notebook**  
-  The main notebook (`spectroscopy_on_fluorescent_mp_particles.ipynb`) contains data loading, preprocessing, visualization, and analysis of the fluorescence spectra.  
+  The main notebook (`spectroscopy_on_fluorescent_mp_particles.ipynb`) covers the full analysis workflow, including data loading, preprocessing, visualization, and classification of the fluorescence spectra.  
 
 ## Requirements
 
