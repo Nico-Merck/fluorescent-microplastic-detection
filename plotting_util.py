@@ -19,7 +19,7 @@ def scatter_plot(df, dim_1, dim_2, symbol_map, color_dict, markersize=10, alpha=
         size=markersize,
         opacity=alpha,
         line=dict(color='black', width=1)
-    ), showlegend=True, legendgroup=1)
+    ), showlegend=True, legendgroup=None)
     fig.add_traces(scatter.data)
 
     fig.update_layout(
@@ -48,65 +48,99 @@ def scatter_plot(df, dim_1, dim_2, symbol_map, color_dict, markersize=10, alpha=
     fig.show()
 
 
-def scatter_plot_1d(df, dim_1, marker_map, marker_dict, color_dict, x_log=False, markersize=10, jitter_strength=0.1, alpha_pts=0.85, random_state=42):
+def scatter_plot_1d(
+    df,
+    dim_1,
+    marker_map,
+    marker_dict,
+    color_dict,
+    x_log=False,
+    markersize=10,
+    jitter_strength=0.1,
+    alpha_pts=0.85,
+    random_state=42,
+    sorting_order: list | None = None,
+):
     fig = go.Figure()
     seen = set()
     rng = np.random.default_rng(random_state)
 
-    for cls, group in df.groupby(level='class'):
-        sample_keys = group.reset_index(level='class', drop=True).index.values
+    classes_present = list(df.index.get_level_values("class").unique())
+
+    if sorting_order is not None:
+        ordered = [c for c in sorting_order if c in classes_present] + [
+            c for c in classes_present if c not in (sorting_order or [])
+        ]
+    else:
+        ordered = classes_present
+
+    for cls in ordered:
+        idx = df.index.get_level_values("class") == cls
+        if not idx.any():
+            continue
+        group = df.loc[idx]
+        sample_keys = group.reset_index(level="class", drop=True).index.values
         x = group[dim_1].values
         n = x.size
         if n == 0:
             continue
         y_jitter = rng.uniform(-jitter_strength, jitter_strength, size=n)
-        symbol = marker_map.get(marker_dict.get(cls, 'o'), 'circle')
+        symbol = marker_map.get(marker_dict.get(cls, "o"), "circle")
         showleg = cls not in seen
-        fig.add_trace(go.Scatter(
-            x = x,
-            y = y_jitter,
-            mode = 'markers',
-            name = cls,
-            legendgroup = cls,
-            showlegend = showleg,
-            marker = dict(
-                symbol = symbol,
-                size = markersize,
-                color = color_dict.get(cls, "gray"),
-                opacity = alpha_pts,
-                line = dict(color='black', width=1)
-            ),
-            text = sample_keys, 
-            hovertemplate = f"<b>%{{text}}</b><br><br>class: {cls}<br>{dim_1}: %{{x}}<br><extra></extra>"
-        ))
-        seen.add(cls)  
+        fig.add_trace(
+            go.Scatter(
+                x=x,
+                y=y_jitter,
+                mode="markers",
+                name=cls,
+                legendgroup=cls,
+                showlegend=showleg,
+                marker=dict(
+                    symbol=symbol,
+                    size=markersize,
+                    color=color_dict.get(cls, "gray"),
+                    opacity=alpha_pts,
+                    line=dict(color="black", width=1),
+                ),
+                text=sample_keys,
+                hovertemplate=f"<b>%{{text}}</b><br><br>class: {cls}<br>{dim_1}: %{{x}}<br><extra></extra>",
+            )
+        )
+        seen.add(cls)
 
     fig.update_layout(
-        width = 1000,
-        height = 300,
-        xaxis = dict(
-            title = dim_1,
-            ticks = 'outside',
-            type='log' if x_log else 'linear',
-            showgrid = True, gridcolor = 'rgba(0,0,0,0.08)',
-            showline=True, linewidth=1, linecolor='black', mirror=True
+        width=1000,
+        height=300,
+        xaxis=dict(
+            title=dim_1,
+            ticks="outside",
+            type="log" if x_log else "linear",
+            showgrid=True,
+            gridcolor="rgba(0,0,0,0.08)",
+            showline=True,
+            linewidth=1,
+            linecolor="black",
+            mirror=True,
         ),
-        yaxis = dict(
-            tickmode='array', 
-            tickvals=[], 
-            ticktext=[''],
+        yaxis=dict(
+            tickmode="array",
+            tickvals=[],
+            ticktext=[""],
             range=[-1, 1],
-            showgrid = True,
-            gridcolor = 'rgba(0,0,0,0.08)',
-            showline=True, linewidth=1, linecolor='black', mirror=True
+            showgrid=True,
+            gridcolor="rgba(0,0,0,0.08)",
+            showline=True,
+            linewidth=1,
+            linecolor="black",
+            mirror=True,
         ),
-        template = 'simple_white',
-        legend = dict(title='Class', x=1.05, y=1, itemclick='toggle'),
-        margin = dict(l=60, r=200, t=40, b=60)
+        template="simple_white",
+        legend=dict(title="Class", x=1.05, y=1, itemclick="toggle"),
+        margin=dict(l=60, r=200, t=40, b=60),
     )
 
     fig.show()
-    
+
 # Function for plotting new test data along with training data
 def scatter_plot_train_test(df_train, df_test, dim_1, dim_2, symbol_map, color_dict, markersize=10, y_log=False):
     fig = go.Figure()
@@ -124,7 +158,7 @@ def scatter_plot_train_test(df_train, df_test, dim_1, dim_2, symbol_map, color_d
         size=markersize,
         opacity=0.3,
         line=dict(color='black', width=1)
-    ), showlegend=False, legendgroup='train')
+    ), showlegend=False, legendgroup=None)
     fig.add_traces(train_scatter.data)
 
     test_scatter = px.scatter(
@@ -141,7 +175,7 @@ def scatter_plot_train_test(df_train, df_test, dim_1, dim_2, symbol_map, color_d
         size=markersize,
         opacity=1.0,
         line=dict(color='black', width=1)
-    ), showlegend=True, legendgroup='test')
+    ), showlegend=True, legendgroup=None)
     fig.add_traces(test_scatter.data)
 
     fig.update_layout(
@@ -169,89 +203,131 @@ def scatter_plot_train_test(df_train, df_test, dim_1, dim_2, symbol_map, color_d
     )
     fig.show()
 
-def scatter_plot_train_test_1d(df_train, df_test, dim_1, marker_map, marker_dict, color_dict, x_log=False, markersize=10, jitter_strength=0.1, alpha_pts=0.85, random_state=42):
+def scatter_plot_train_test_1d(
+    df_train,
+    df_test,
+    dim_1,
+    marker_map,
+    marker_dict,
+    color_dict,
+    x_log=False,
+    markersize=10,
+    jitter_strength=0.1,
+    alpha_pts=0.85,
+    random_state=42,
+    sorting_order: list | None = None,
+):
     fig = go.Figure()
     seen = set()
     rng = np.random.default_rng(random_state)
 
-    for cls, group in df_train.groupby(level='class'):
-        sample_keys = group.reset_index(level='class', drop=True).index.values
-        x = group[dim_1].values
-        n = x.size
-        if n == 0:
-            continue
-        y_jitter = 0.5 + rng.uniform(-jitter_strength, jitter_strength, size=n)
-        symbol = marker_map.get(marker_dict.get(cls, 'o'), 'circle')
-        showleg = cls not in seen
-        fig.add_trace(go.Scatter(
-            x = x,
-            y = y_jitter,
-            mode = 'markers',
-            name = cls,
-            legendgroup = cls,
-            showlegend = showleg,
-            marker = dict(
-                symbol = symbol,
-                size = markersize,
-                color = color_dict.get(cls, "gray"),
-                opacity = alpha_pts,
-                line = dict(color='black', width=1)
-            ),
-            text = sample_keys, 
-            hovertemplate = f"<b>%{{text}}</b><br><br>class: {cls}<br>{dim_1}: %{{x}}<br><extra></extra>"
-        ))
-        seen.add(cls)
+    classes_train = list(df_train.index.get_level_values("class").unique())
+    classes_test = list(df_test.index.get_level_values("class").unique())
+    classes_present = []
+    for c in classes_train + classes_test:
+        if c not in classes_present:
+            classes_present.append(c)
 
-    for cls, group in df_test.groupby(level='class'):
-        sample_keys = group.reset_index(level='class', drop=True).index.values
-        x = group[dim_1].values
-        n = x.size
-        if n == 0:
-            continue
-        y_jitter = -0.5 + rng.uniform(-jitter_strength, jitter_strength, size=n)
-        symbol = marker_map.get(marker_dict.get(cls, 'o'), 'circle')
-        showleg = cls not in seen
-        fig.add_trace(go.Scatter(
-            x = x,
-            y = y_jitter,
-            mode = 'markers',
-            name = cls,
-            legendgroup = cls,
-            showlegend = showleg,
-            marker = dict(
-                symbol = symbol,
-                size = markersize,
-                color = color_dict.get(cls, "gray"),
-                opacity = alpha_pts,
-                line = dict(color='black', width=1)
-            ),
-            text = sample_keys, 
-            hovertemplate = f"<b>%{{text}}</b><br><br>class: {cls}<br>{dim_1}: %{{x}}<br><extra></extra>"
-        ))
-        seen.add(cls)
+    if sorting_order is not None:
+        ordered = [c for c in sorting_order if c in classes_present] + [
+            c for c in classes_present if c not in (sorting_order or [])
+        ]
+    else:
+        ordered = classes_present
+
+    for cls in ordered:
+        idx_tr = df_train.index.get_level_values("class") == cls
+        if idx_tr.any():
+            group = df_train.loc[idx_tr]
+            sample_keys = group.reset_index(level="class", drop=True).index.values
+            x = group[dim_1].values
+            n = x.size
+            if n > 0:
+                y_jitter = 0.5 + rng.uniform(-jitter_strength, jitter_strength, size=n)
+                symbol = marker_map.get(marker_dict.get(cls, "o"), "circle")
+                showleg = cls not in seen
+                fig.add_trace(
+                    go.Scatter(
+                        x=x,
+                        y=y_jitter,
+                        mode="markers",
+                        name=cls,
+                        legendgroup=cls,
+                        showlegend=showleg,
+                        marker=dict(
+                            symbol=symbol,
+                            size=markersize,
+                            color=color_dict.get(cls, "gray"),
+                            opacity=alpha_pts,
+                            line=dict(color="black", width=1),
+                        ),
+                        text=sample_keys,
+                        hovertemplate=f"<b>%{{text}}</b><br><br>class: {cls}<br>{dim_1}: %{{x}}<br><extra></extra>",
+                    )
+                )
+                seen.add(cls)
+
+        idx_te = df_test.index.get_level_values("class") == cls
+        if idx_te.any():
+            group = df_test.loc[idx_te]
+            sample_keys = group.reset_index(level="class", drop=True).index.values
+            x = group[dim_1].values
+            n = x.size
+            if n > 0:
+                y_jitter = -0.5 + rng.uniform(-jitter_strength, jitter_strength, size=n)
+                symbol = marker_map.get(marker_dict.get(cls, "o"), "circle")
+                # showlegend stays False if bereits in seen (Train zuerst), sonst True
+                showleg = cls not in seen
+                fig.add_trace(
+                    go.Scatter(
+                        x=x,
+                        y=y_jitter,
+                        mode="markers",
+                        name=cls,
+                        legendgroup=cls,
+                        showlegend=showleg,
+                        marker=dict(
+                            symbol=symbol,
+                            size=markersize,
+                            color=color_dict.get(cls, "gray"),
+                            opacity=alpha_pts,
+                            line=dict(color="black", width=1),
+                        ),
+                        text=sample_keys,
+                        hovertemplate=f"<b>%{{text}}</b><br><br>class: {cls}<br>{dim_1}: %{{x}}<br><extra></extra>",
+                    )
+                )
+                seen.add(cls)
 
     fig.update_layout(
-        width = 1000,
-        height = 300,
-        xaxis = dict(
-            title = dim_1,
-            ticks = 'outside',
-            type='log' if x_log else 'linear',
-            showgrid = True, gridcolor = 'rgba(0,0,0,0.08)',
-            showline=True, linewidth=1, linecolor='black', mirror=True
+        width=1000,
+        height=300,
+        xaxis=dict(
+            title=dim_1,
+            ticks="outside",
+            type="log" if x_log else "linear",
+            showgrid=True,
+            gridcolor="rgba(0,0,0,0.08)",
+            showline=True,
+            linewidth=1,
+            linecolor="black",
+            mirror=True,
         ),
-        yaxis = dict(
-            tickmode='array', 
-            tickvals=[0.5, -0.5], 
-            ticktext=['Train', 'Test'],
+        yaxis=dict(
+            tickmode="array",
+            tickvals=[0.5, -0.5],
+            ticktext=["Train", "Test"],
             range=[-1, 1],
-            showgrid = True,
-            gridcolor = 'rgba(0,0,0,0.08)',
-            showline=True, linewidth=1, linecolor='black', mirror=True
+            showgrid=True,
+            gridcolor="rgba(0,0,0,0.08)",
+            showline=True,
+            linewidth=1,
+            linecolor="black",
+            mirror=True,
         ),
-        template = 'simple_white',
-        legend = dict(x=1.05, y=1),
-        margin = dict(l=60, r=200, t=40, b=60)
+        template="simple_white",
+        legend=dict(title="Class", x=1.05, y=1, itemclick="toggle"),
+        margin=dict(l=60, r=200, t=40, b=60),
     )
 
     fig.show()
@@ -266,18 +342,27 @@ def plot_spectra_by_class(
     y_range=(-0.1, 1.1),
     opacity=0.2,
     line_width=1,
-    legend_title="Class"
+    legend_title="Class",
+    sorting_order: list | None = None,
 ) -> None:
-    """
-    Create a Plotly figure with spectra grouped by class.
-    """
     if color_dict is None:
         color_dict = {}
 
+    classes_present = list(X_minmax.index.get_level_values("class").unique())
+    if sorting_order is not None:
+        ordered = [c for c in sorting_order if c in classes_present] + [
+            c for c in classes_present if c not in (sorting_order or [])
+        ]
+    else:
+        ordered = classes_present
+
     fig = go.Figure()
-    for cls, sub in X_minmax.groupby(level="class"):
+    for cls in ordered:
+        idx = X_minmax.index.get_level_values("class") == cls
+        if not idx.any():
+            continue
         color = color_dict.get(cls, "black")
-        sub2 = sub.reset_index(level="class", drop=True)
+        sub2 = X_minmax.loc[idx].reset_index(level="class", drop=True)
         for sample_key, row in sub2.iterrows():
             fig.add_trace(
                 go.Scatter(
@@ -291,7 +376,6 @@ def plot_spectra_by_class(
                     showlegend=False,
                 )
             )
-        # add class legend entry
         fig.add_trace(
             go.Scatter(
                 x=[wavelengths[0]],
