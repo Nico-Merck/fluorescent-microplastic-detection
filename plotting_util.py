@@ -53,32 +53,33 @@ def scatter_plot_1d(df, dim_1, marker_map, marker_dict, color_dict, x_log=False,
     seen = set()
     rng = np.random.default_rng(random_state)
 
-    for class_ in df.index.get_level_values("class").unique():
-        idx = df.index.get_level_values("class") == class_
-        x = df.loc[idx, dim_1].values
+    for cls, group in df.groupby(level='class'):
+        sample_keys = group.reset_index(level='class', drop=True).index.values
+        x = group[dim_1].values
         n = x.size
         if n == 0:
             continue
         y_jitter = rng.uniform(-jitter_strength, jitter_strength, size=n)
-        symbol = marker_map.get(marker_dict.get(class_, 'o'), 'circle')
-        showleg = class_ not in seen
+        symbol = marker_map.get(marker_dict.get(cls, 'o'), 'circle')
+        showleg = cls not in seen
         fig.add_trace(go.Scatter(
             x = x,
             y = y_jitter,
             mode = 'markers',
-            name = class_,
-            legendgroup = class_,
+            name = cls,
+            legendgroup = cls,
             showlegend = showleg,
             marker = dict(
                 symbol = symbol,
                 size = markersize,
-                color = color_dict.get(class_, "gray"),
+                color = color_dict.get(cls, "gray"),
                 opacity = alpha_pts,
                 line = dict(color='black', width=1)
             ),
-            hovertemplate = f"{class_}<br>{dim_1}: %{{x}}<extra></extra>"
+            text = sample_keys, 
+            hovertemplate = f"<b>%{{text}}</b><br><br>class: {cls}<br>{dim_1}: %{{x}}<br><extra></extra>"
         ))
-        seen.add(class_)
+        seen.add(cls)  
 
     fig.update_layout(
         width = 1000,
@@ -173,59 +174,61 @@ def scatter_plot_train_test_1d(df_train, df_test, dim_1, marker_map, marker_dict
     seen = set()
     rng = np.random.default_rng(random_state)
 
-    for class_ in df_train.index.get_level_values("class").unique():
-        idx = df_train.index.get_level_values("class") == class_
-        x = df_train.loc[idx, dim_1].values
+    for cls, group in df_train.groupby(level='class'):
+        sample_keys = group.reset_index(level='class', drop=True).index.values
+        x = group[dim_1].values
         n = x.size
         if n == 0:
             continue
         y_jitter = 0.5 + rng.uniform(-jitter_strength, jitter_strength, size=n)
-        symbol = marker_map.get(marker_dict.get(class_, 'o'), 'circle')
-        showleg = class_ not in seen
+        symbol = marker_map.get(marker_dict.get(cls, 'o'), 'circle')
+        showleg = cls not in seen
         fig.add_trace(go.Scatter(
             x = x,
             y = y_jitter,
             mode = 'markers',
-            name = class_,
-            legendgroup = class_,
+            name = cls,
+            legendgroup = cls,
             showlegend = showleg,
             marker = dict(
                 symbol = symbol,
                 size = markersize,
-                color = color_dict.get(class_, "gray"),
+                color = color_dict.get(cls, "gray"),
                 opacity = alpha_pts,
                 line = dict(color='black', width=1)
             ),
-            hovertemplate = f"{class_}<br>{dim_1}: %{{x}}<extra></extra>"
+            text = sample_keys, 
+            hovertemplate = f"<b>%{{text}}</b><br><br>class: {cls}<br>{dim_1}: %{{x}}<br><extra></extra>"
         ))
-        seen.add(class_)
+        seen.add(cls)
 
-    for class_ in df_test.index.get_level_values("class").unique():
-        idx = df_test.index.get_level_values("class") == class_
-        x = df_test.loc[idx, dim_1].values
+    for cls, group in df_test.groupby(level='class'):
+        sample_keys = group.reset_index(level='class', drop=True).index.values
+        x = group[dim_1].values
         n = x.size
         if n == 0:
             continue
         y_jitter = -0.5 + rng.uniform(-jitter_strength, jitter_strength, size=n)
-        symbol = marker_map.get(marker_dict.get(class_, 'o'), 'circle')
-        showleg = class_ not in seen
+        symbol = marker_map.get(marker_dict.get(cls, 'o'), 'circle')
+        showleg = cls not in seen
         fig.add_trace(go.Scatter(
             x = x,
             y = y_jitter,
             mode = 'markers',
-            name = class_,
-            legendgroup = class_,
+            name = cls,
+            legendgroup = cls,
             showlegend = showleg,
             marker = dict(
                 symbol = symbol,
                 size = markersize,
-                color = color_dict.get(class_, "gray"),
+                color = color_dict.get(cls, "gray"),
                 opacity = alpha_pts,
                 line = dict(color='black', width=1)
             ),
-            hovertemplate = f"{class_}<br>{dim_1}: %{{x}}<extra></extra>"
+            text = sample_keys, 
+            hovertemplate = f"<b>%{{text}}</b><br><br>class: {cls}<br>{dim_1}: %{{x}}<br><extra></extra>"
         ))
-        seen.add(class_)
+        seen.add(cls)
 
     fig.update_layout(
         width = 1000,
@@ -253,3 +256,233 @@ def scatter_plot_train_test_1d(df_train, df_test, dim_1, marker_map, marker_dict
 
     fig.show()
 
+def plot_spectra_by_class(
+    X_minmax,
+    wavelengths,
+    color_dict=None,
+    width=1000,
+    height=600,
+    x_range=(370, 925),
+    y_range=(-0.1, 1.1),
+    opacity=0.2,
+    line_width=1,
+    legend_title="Class"
+) -> None:
+    """
+    Create a Plotly figure with spectra grouped by class.
+    """
+    if color_dict is None:
+        color_dict = {}
+
+    fig = go.Figure()
+    for cls, sub in X_minmax.groupby(level="class"):
+        color = color_dict.get(cls, "black")
+        sub2 = sub.reset_index(level="class", drop=True)
+        for sample_key, row in sub2.iterrows():
+            fig.add_trace(
+                go.Scatter(
+                    x=wavelengths,
+                    y=row.values,
+                    mode="lines",
+                    line=dict(color=color, width=line_width),
+                    opacity=opacity,
+                    name=str(sample_key),
+                    legendgroup=cls,
+                    showlegend=False,
+                )
+            )
+        # add class legend entry
+        fig.add_trace(
+            go.Scatter(
+                x=[wavelengths[0]],
+                y=[np.nan],
+                mode="lines",
+                line=dict(color=color, width=3),
+                name=cls,
+                legendgroup=cls,
+                showlegend=True,
+            )
+        )
+
+    fig.update_layout(
+        width=width,
+        height=height,
+        xaxis_title="Wavelength (nm)",
+        yaxis_title="Normalised Counts (a.u.)",
+        yaxis=dict(
+            range=list(y_range),
+            showline=True,
+            linewidth=1,
+            linecolor="black",
+            mirror=True,
+            ticks="outside",
+        ),
+        xaxis=dict(
+            range=list(x_range),
+            showline=True,
+            linewidth=1,
+            linecolor="black",
+            mirror=True,
+            ticks="outside",
+        ),
+        plot_bgcolor="white",
+        paper_bgcolor="white",
+        legend=dict(title=legend_title, itemclick="toggle"),
+        template="simple_white",
+        margin=dict(l=80, r=40, t=40, b=60),
+    )
+
+    fig.show()
+
+
+def plot_box_parameters(
+    df_data_complete: pd.DataFrame,
+    param_names: "list[str]",
+    width=1000,
+    height=600,
+    dropdown_x =1.15,
+    dropdown_y=1.0,
+    initial_idx=0,
+    template="simple_white"
+) -> None:
+    """
+    Create a Plotly figure with grouped boxplots for the parameter lists in `param_names`.
+    A dropdown lets the user switch which parameter is visible.
+
+    Returns the Plotly Figure.
+    """
+
+    traces = []
+    # build one box trace per parameter (x=sample, y=values)
+    for idx, param in enumerate(param_names):
+        if param not in df_data_complete.columns:
+            # skip missing parameter columns
+            print(f"Parameter '{param}' not found in dataframe — skipped.")
+            continue
+
+        y = np.concatenate([np.ravel(vals) for vals in df_data_complete[param].values])
+        x = np.concatenate(
+            [[sample] * len(np.ravel(vals)) for sample, vals in zip(df_data_complete.index, df_data_complete[param])]
+        )
+        traces.append(
+            go.Box(
+                y=y,
+                x=x,
+                name=param,
+                visible=(len(traces) == initial_idx),
+                boxmean="sd",
+            )
+        )
+
+    # build dropdown buttons (one per existing trace)
+    buttons = []
+    for i, trace in enumerate(traces):
+        visible = [False] * len(traces)
+        visible[i] = True
+        buttons.append(
+            dict(
+                label=trace.name,
+                method="update",
+                args=[
+                    {"visible": visible},
+                    {
+                        "yaxis": {
+                            "title": trace.name,
+                            "showline": True,
+                            "linewidth": 1,
+                            "linecolor": "black",
+                            "mirror": True,
+                            "ticks": "outside",
+                        },
+                        "xaxis": {
+                            "showline": True,
+                            "linewidth": 1,
+                            "linecolor": "black",
+                            "mirror": True,
+                            "ticks": "outside",
+                        },
+                    },
+                ],
+            )
+        )
+
+    fig = go.Figure(data=traces)
+    fig.update_layout(
+        updatemenus=[
+            dict(type="dropdown", direction="down", buttons=buttons, x=dropdown_x, y=dropdown_y, showactive=True)
+        ],
+        yaxis=dict(showline=True, linewidth=1, linecolor="black", mirror=True, ticks="outside"),
+        xaxis=dict(showline=True, linewidth=1, linecolor="black", mirror=True, ticks="outside"),
+        yaxis_title=param_names[initial_idx] if len(param_names) > initial_idx else "",
+        xaxis_title="Sample",
+        width=width,
+        height=height,
+        boxmode="group",
+        template=template,
+        margin=dict(l=60, r=40, t=40, b=60),
+    )
+
+    fig.show()
+
+def plot_lda_explained_variance(evr, width: int = 1000, height: int = 600) -> None:
+    """
+    Plot LDA explained variance (bars) and cumulative explained variance (line).
+    """
+
+    evr = np.asarray(evr)
+    if evr.size == 0:
+        raise ValueError("evr is empty")
+
+    indices = np.arange(1, len(evr) + 1)
+    labels = [f"LD{i}" for i in indices]
+    explained_var = evr * 100
+    cumulative_var = np.cumsum(evr) * 100
+
+    fig = go.Figure()
+
+    # bar: explained variance
+    fig.add_trace(go.Bar(
+        x=labels,
+        y=explained_var,
+        name="Explained variance",
+        marker_color="steelblue"
+    ))
+
+    # line: cumulative explained variance
+    fig.add_trace(go.Scatter(
+        x=labels,
+        y=cumulative_var,
+        mode="lines+markers",
+        name="Cumulative",
+        line=dict(color="black"),
+        marker=dict(symbol="circle", color="black")
+    ))
+
+    fig.update_layout(
+        width=width,
+        height=height,
+        xaxis_title="Linear Discriminant",
+        yaxis_title="Explained variance (%)",
+        xaxis=dict(
+            showline=True,
+            linewidth=1,
+            linecolor="black",
+            mirror=True,
+            tickmode="array",
+            tickvals=labels,
+            ticktext=labels
+        ),
+        yaxis=dict(
+            showline=True,
+            linewidth=1,
+            linecolor="black",
+            mirror=True,
+            showgrid=True,
+            gridcolor="rgba(0,0,0,0.08)"
+        ),
+        legend=dict(itemclick="toggle"),
+        template="simple_white",
+        margin=dict(l=60, r=40, t=60, b=60)
+    )
+
+    fig.show()
