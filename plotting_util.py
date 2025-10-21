@@ -59,7 +59,7 @@ def scatter_plot_1d(
     jitter_strength=0.1,
     alpha_pts=0.85,
     random_state=42,
-    sorting_order: list | None = None,
+    sorting_order=None
 ):
     fig = go.Figure()
     seen = set()
@@ -215,7 +215,7 @@ def scatter_plot_train_test_1d(
     jitter_strength=0.1,
     alpha_pts=0.85,
     random_state=42,
-    sorting_order: list | None = None,
+    sorting_order=None
 ):
     fig = go.Figure()
     seen = set()
@@ -343,8 +343,8 @@ def plot_spectra_by_class(
     opacity=0.2,
     line_width=1,
     legend_title="Class",
-    sorting_order: list | None = None,
-) -> None:
+    sorting_order=None,
+):
     if color_dict is None:
         color_dict = {}
 
@@ -428,7 +428,7 @@ def plot_box_parameters(
     dropdown_y=1.0,
     initial_idx=0,
     template="simple_white"
-) -> None:
+):
     """
     Create a Plotly figure with grouped boxplots for the parameter lists in `param_names`.
     A dropdown lets the user switch which parameter is visible.

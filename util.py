@@ -12,8 +12,6 @@ from sklearn.neighbors import KNeighborsClassifier, NearestCentroid
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import StratifiedKFold, train_test_split
 
-from typing import Optional, Tuple, Dict
-
 def evaluate_classifier(clf, X_train, X_test, y_train, y_test, labels, plot=False):
     clf.fit(X_train, y_train)
     pred = clf.predict(X_test)
@@ -67,7 +65,7 @@ def df_from_dict(dict, normalize=True, classes="all"):
 
     return df
 
-def mean_and_std(data: np.ndarray) -> Tuple[float, float]:
+def mean_and_std(data: np.ndarray):
     """
     Calculates the mean and sample standard deviation of the given data.
 
@@ -85,7 +83,7 @@ def fwhm_and_bounds(
     wavelengths: np.ndarray,
     spectrum: np.ndarray,
     max_index: np.ndarray
-    ) -> Tuple[float, float, float, float, float, float, float, float]:
+    ):
     """
     Calculates the full width at half maximum (FWHM) and the left and right half maximum wavelengths (with interpolation).
 
