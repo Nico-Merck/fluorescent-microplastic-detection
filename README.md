@@ -1,6 +1,7 @@
 # A non-contact in-situ approach for detecting fluorescent microplastic particles in flowing water using fluorescence spectroscopy
 
-[![DOI](https://zenodo.org/badge/1059388005.svg)](https://doi.org/10.5281/zenodo.17177032)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17184554.svg)](https://doi.org/10.5281/zenodo.17177032)
+
 
 This repository contains the code and data used for analysing fluorescence spectra of microplastic particles.  
 The aim is to characterise different polymer samples and their fluorescent properties using spectroscopic methods.  
@@ -130,7 +131,7 @@ conda activate mp_venv
 
 ---
 
-## Licence
+## License
 
 This project is licensed under the terms of the **Apache 2.0 License**.  
 See the [LICENSE](LICENSE) file for details.
