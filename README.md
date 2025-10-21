@@ -55,22 +55,29 @@ This study demonstrates in-flow detection of polypropylene particles containing 
 
 ## Requirements
 
-To run the notebook, you need:
+To run the analysis or reproduce the figures, you need:
 
-- Python 3.13.5+  
-- Jupyter Notebook or JupyterLab  
-- Packages:  
-  ```bash
-  numpy 2.2.6
-  python 3.13.5
-  pandas 1.5.3
-  plotly 6.3.0
-  scikit-learn 1.7.1
-  scipy 1.16.1
-  ```
-  (see `environment.yml` for details)
+- **Python** ≥ 3.9  
+- **Jupyter Notebook** or **JupyterLab**
 
-Install dependencies with:
+Core dependencies:
+```bash
+python        >= 3.9
+ipykernel     >= 6.30
+matplotlib    >= 3.9
+nbformat      >= 4.2.0
+numpy         >= 2.0
+pandas        >= 2.3
+plotly        >= 6.3
+scikit-learn  >= 1.6
+scipy         >= 1.13
+```
+
+All dependencies are specified in [`environment.yml`](environment.yml).
+
+## Installation
+
+Create and activate the Conda environment:
 ```bash
 conda env create -f environment.yml
 conda activate mp_venv
@@ -78,20 +85,38 @@ conda activate mp_venv
 
 ## Usage
 
-1. Clone the repository:
+1. **Clone the repository**
+
    ```bash
    git clone https://github.com/Nico-Merck/fluorescent-microplastic-detection.git
    cd fluorescent-microplastic-detection
    ```
 
-2. Install the environment as described above.  
+2. **Enable Git LFS (Large File Storage)**  
+   This repository uses [Git LFS](https://git-lfs.github.com/) to store large binary data files such as `.npy` and `.csv` spectra.  
+   If Git LFS is not installed on your system yet, install and activate it before pulling the data:
 
-3. Open the notebook:
    ```bash
-   jupyter notebook spectroscopy_on_fluorescent_mp_particles.ipynb
+   # Install Git LFS (macOS example using Homebrew)
+   brew install git-lfs
+
+   # Initialize Git LFS in your local Git configuration
+   git lfs install
+
+   # Fetch large files
+   git lfs pull
    ```
 
-4. Run all cells to reproduce the analysis and plots.  
+   > 💡 **Note:** If you cloned the repository before enabling LFS,  
+   > run `git lfs pull` to download all large data files that were replaced by pointer files.
+
+3. **Set up the Python environment**  
+   Create and activate the Conda environment (see [Requirements](#requirements)):
+
+   ```bash
+   conda env create -f environment.yml
+   conda activate mp_venv
+   ```
 
 ## License
 
