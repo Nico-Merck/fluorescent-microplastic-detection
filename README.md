@@ -1,4 +1,4 @@
-# A non-contact *in-situ* approach for detecting fluorescent microplastic particles in flowing water using fluorescence spectroscopy
+# A non-contact in-situ approach for detecting fluorescent microplastic particles in flowing water using fluorescence spectroscopy
 
 [![DOI](https://zenodo.org/badge/1059388005.svg)](https://doi.org/10.5281/zenodo.17177032)
 
