@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 
+from matplotlib.lines import Line2D
+
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
