@@ -107,8 +107,7 @@ conda activate mp_venv
    git lfs pull
    ```
 
-   > 💡 **Note:** If you cloned the repository before enabling LFS,  
-   > run `git lfs pull` to download all large data files that were replaced by pointer files.
+   > 💡 **Note:** If you cloned the repository before enabling LFS, run `git lfs pull` to download all large data files that were replaced by pointer files.
 
 3. **Set up the Python environment**  
    Create and activate the Conda environment (see [Requirements](#requirements)):
