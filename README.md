@@ -1,9 +1,13 @@
-# A non-contact in-situ approach for detecting fluorescent microplastic particles in flowing water using fluorescence spectroscopy
+# A non-contact *in-situ* approach for detecting fluorescent microplastic particles in flowing water using fluorescence spectroscopy
 
 [![DOI](https://zenodo.org/badge/1059388005.svg)](https://doi.org/10.5281/zenodo.17177032)
 
-This repository contains the code and data used for analysing fluorescence spectra of microplastic particles. The aim is to characterise different polymer samples and their fluorescent properties using spectroscopic methods.
-This study demonstrates in-flow detection of polypropylene particles containing production-added fluorescent dyes: fluorescence spectroscopy enabled classification via intensity ratios and clustering, while interferometric particle imaging revealed particle size and type.
+This repository contains the code and data used for analysing fluorescence spectra of microplastic particles.  
+The aim is to characterise different polymer samples and their fluorescent properties using spectroscopic methods.  
+This study demonstrates in-flow detection of polypropylene particles containing production-added fluorescent dyes:  
+fluorescence spectroscopy enabled classification via intensity ratios and clustering, while interferometric particle imaging revealed particle size and type.
+
+---
 
 ## Repository structure
 
@@ -20,19 +24,20 @@ This study demonstrates in-flow detection of polypropylene particles containing 
 │       └── wavelengths.npy                          # NumPy array defining wavelength bins for all spectra
 │
 ├── environment.yml                                  # Conda environment file listing dependencies
-├── LICENSE                                          # License information (Apache-2.0)
+├── LICENSE                                          # Licence information (Apache-2.0)
 ├── plotting_util.py                                 # Centralised plot formatting and figure layout functions
 ├── README.md                                        # Project description and usage instructions
 ├── spectra_extraction.py                            # Python script for extracting relevant spectra subsets from data_dicts
 ├── spectroscopy_on_fluorescent_mp_particles.ipynb   # Jupyter Notebook with analysis workflow
 └── util.py                                          # Utility functions for preprocessing, feature extraction, and evaluation
-
 ```
+
+---
 
 ## Contents
 
 - **Data folder**  
-  - `ipi_images/`: Selection of recorded IPI images (classified as bubble or polypropylene particle).  
+  - `ipi_images/`: Selection of recorded interferometric particle images (classified as bubble or polypropylene particle).  
   - `spectral_data/`: Fluorescence spectra from all measurement series.  
     - `spectra_as_csv/`: Raw spectra from individual measurement series stored as CSV files.  
     - `data_dict_XX.npy`: NumPy dictionaries containing all spectra of a given measurement series.  
@@ -41,17 +46,18 @@ This study demonstrates in-flow detection of polypropylene particles containing 
 
 - **Python scripts**  
   - `spectra_extraction.py`: Extracts relevant spectra subsets from the large `data_dict_XX.npy` files and saves them as `spectra_peaks_dict_XX.npy`.  
-  - `util.py`: Contains utility functions for preprocessing, normalization, feature extraction, and classifier evaluation (e.g., FWHM, intensity ratios, metrics).  
-  - `plotting_util.py`: Centralized collection of plotting and formatting utilities used by the Jupyter Notebook for consistent figure generation.  
+  - `util.py`: Contains utility functions for preprocessing, normalisation, feature extraction, and classifier evaluation (e.g. FWHM, intensity ratios, metrics).  
+  - `plotting_util.py`: Centralised collection of plotting and formatting utilities used by the Jupyter Notebook for consistent figure generation.  
 
 - **Jupyter Notebook**  
-  The notebook `spectroscopy_on_fluorescent_mp_particles.ipynb` covers the full analysis workflow, including data loading, preprocessing, visualization, classification, and validation of fluorescence spectra.  
+  The notebook `spectroscopy_on_fluorescent_mp_particles.ipynb` covers the full analysis workflow, including data loading, preprocessing, and visualisation of fluorescence spectra as well as classification and validation of dimensionality reduction methods.  
 
 - **Environment & metadata**  
   - `environment.yml`: Conda environment file specifying dependencies required to reproduce the analysis.  
-  - `LICENSE`: License information (Apache-2.0).  
+  - `LICENSE`: Licence information (Apache-2.0).  
   - `README.md`: Project description, installation instructions, and usage guide.  
 
+---
 
 ## Requirements
 
@@ -75,6 +81,8 @@ scipy         >= 1.13
 
 All dependencies are specified in [`environment.yml`](environment.yml).
 
+---
+
 ## Installation
 
 Create and activate the Conda environment:
@@ -82,6 +90,8 @@ Create and activate the Conda environment:
 conda env create -f environment.yml
 conda activate mp_venv
 ```
+
+---
 
 ## Usage
 
@@ -100,14 +110,15 @@ conda activate mp_venv
    # Install Git LFS (macOS example using Homebrew)
    brew install git-lfs
 
-   # Initialize Git LFS in your local Git configuration
+   # Initialise Git LFS in your local Git configuration
    git lfs install
 
    # Fetch large files
    git lfs pull
    ```
 
-   > 💡 **Note:** If you cloned the repository before enabling LFS, run `git lfs pull` to download all large data files that were replaced by pointer files.
+   > 💡 **Note:** If you cloned the repository before enabling LFS, run `git lfs pull`  
+   > to download all large data files that were replaced by pointer files.
 
 3. **Set up the Python environment**  
    Create and activate the Conda environment (see [Requirements](#requirements)):
@@ -117,8 +128,9 @@ conda activate mp_venv
    conda activate mp_venv
    ```
 
-## License
+---
 
-This project is licensed under the terms of the **Apache-2.0 license**.  
-See the [LICENSE](LICENSE) file for details.
+## Licence
 
+This project is licensed under the terms of the **Apache 2.0 Licence**.  
+See the [LICENCE](LICENSE) file for details.
