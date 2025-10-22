@@ -65,10 +65,20 @@ fluorescence spectroscopy enabled classification via intensity ratios and cluste
 
 ---
 
+## Interactive notebook
+
+You can explore the complete analysis workflow directly in your browser — no local setup required.  
+Launch the Jupyter Notebook via Binder:
+
+[![Binder](https://2i2c.mybinder.org/badge_logo.svg)](https://2i2c.mybinder.org/v2/gh/Nico-Merck/fluorescent-microplastic-detection/main?urlpath=%2Fdoc%2Ftree%2Fspectroscopy_on_fluorescent_mp_particles.ipynb)
+
+This opens an interactive environment hosted by [2i2c/mybinder.org](https://2i2c.mybinder.org), allowing you to explore the notebook `spectroscopy_on_fluorescent_mp_particles.ipynb` and reproduce the analysis without installing any dependencies.
+
+---
 
 ## Requirements
 
-To run the analysis or reproduce the figures, you need:
+If you want to to run the analysis or reproduce the figures on your local installation, you need:
 
 - **Python** ≥ 3.9  
 - **Jupyter Notebook** or **JupyterLab**
