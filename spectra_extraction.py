@@ -6,7 +6,7 @@ from pathlib import Path
 top_n = 30              # Number of top peaks to find in spectra sums
 prom_sum_peaks = 0.1    # Minimum prominence of peaks in spectra sums
 
-data_path = Path.cwd() / "data/spectral_data"
+data_path = data_path = Path(__file__).parent / "data/spectral_data"
 
 for data_sel in range(1,4):
     data_dict = np.load(data_path / f"data_dict_{data_sel}.npy", allow_pickle=True).item()
@@ -35,7 +35,7 @@ for data_sel in range(1,4):
 
         # Add spectra behind peaks to dictionary
         for j in range(len(spectra_peaks)):
-            spectra_dict[f"{sample}_{str(j+1).zfill(3)}"] = spectra_peaks[j]
+            spectra_dict[f"{sample}_ms{data_sel}_{str(j+1).zfill(2)}"] = spectra_peaks[j]
 
         print(f"Processed {sample}: {len(spectra)} spectra, {len(spectra_peaks)} peaks found")
 
