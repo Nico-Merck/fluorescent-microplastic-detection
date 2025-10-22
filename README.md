@@ -17,6 +17,9 @@ fluorescence spectroscopy enabled classification via intensity ratios and cluste
 ├── data/                                            # Raw and processed data
 │   ├── ipi_images/                                  # Selection of recorded interferometric particle images
 │   │   └── *.png                                    # Classified as bubble or polypropylene particle
+│   ├── manual_synchronisation/                      # Manually synchronised examples linking image features and spectra
+│   │   ├── *.png                                    # Three manually synchronised particle images
+│   │   └── *.csv                                    # Corresponding fluorescence spectra for each image
 │   └── spectral_data/                               # Fluorescence spectra from all measurement series
 │       ├── spectra_as_csv/                          # Individual measurement series as CSV files
 │       │   └── *.csv                                # Raw spectra per measurement series
@@ -39,6 +42,8 @@ fluorescence spectroscopy enabled classification via intensity ratios and cluste
 
 - **Data folder**  
   - `ipi_images/`: Selection of recorded interferometric particle images (classified as bubble or polypropylene particle).  
+  - `manual_synchronisation/`: Contains three manually synchronised examples linking interferometric images with their corresponding fluorescence spectra.  
+    These data illustrate the relation between particle size, speckle structure, and spectral intensity or shape.  
   - `spectral_data/`: Fluorescence spectra from all measurement series.  
     - `spectra_as_csv/`: Raw spectra from individual measurement series stored as CSV files.  
     - `data_dict_XX.npy`: NumPy dictionaries containing all spectra of a given measurement series.  
@@ -59,6 +64,7 @@ fluorescence spectroscopy enabled classification via intensity ratios and cluste
   - `README.md`: Project description, installation instructions, and usage guide.  
 
 ---
+
 
 ## Requirements
 
