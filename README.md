@@ -1,8 +1,6 @@
 # A non-contact in-situ approach for detecting fluorescent microplastic particles in flowing water using fluorescence spectroscopy
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17177032.svg)](https://doi.org/10.5281/zenodo.17177032)
-[![Binder](https://2i2c.mybinder.org/badge_logo.svg)](https://2i2c.mybinder.org/v2/gh/Nico-Merck/fluorescent-microplastic-detection/main?urlpath=%2Fdoc%2Ftree%2Fspectroscopy_on_fluorescent_mp_particles.ipynb)
-
 
 This repository contains the code and data used for analysing fluorescence spectra of microplastic particles.  
 The aim is to characterise different polymer samples and their fluorescent properties using spectroscopic methods.  
