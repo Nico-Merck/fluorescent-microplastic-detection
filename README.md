@@ -1,7 +1,7 @@
 # A non-contact in-situ approach for detecting fluorescent microplastic particles in flowing water using fluorescence spectroscopy
 
 [![DOI](https://img.shields.io/badge/Zenodo-10.5281%2Fzenodo.17177032-blue?logo=zenodo)](https://doi.org/10.5281/zenodo.17177032)
-
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.17177032-blue.svg)](https://doi.org/10.5281/zenodo.17177032)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17177032.svg?refresh=1)](https://doi.org/10.5281/zenodo.17177032)
 
 This repository contains the code and data used for analysing fluorescence spectra of microplastic particles.  
